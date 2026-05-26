@@ -1,0 +1,6 @@
+{
+  "name": "InstaMocks",
+  "description": "Premium instant mock exam generator from PYQ test papers with secure Firebase login and session synchronization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

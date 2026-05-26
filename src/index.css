@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  
+  --color-bg-base: #010409;
+  --color-bg-card: #0d1117;
+  --color-bg-card-light: #161b22;
+  --color-border-dark: #21262d;
+  --color-border-accent: #30363d;
+}
+
+body {
+  background-color: #030712; /* Tailwind gray-950 equivalent or base */
+  color: #f3f4f6;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #202b42;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+.custom-glow {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.2);
+}
+
+.custom-glow-purple {
+  box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.2);
+}
+
+/* Animations helper */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.glow-bg-primary {
+  animation: pulseGlow 8s infinite ease-in-out;
+}

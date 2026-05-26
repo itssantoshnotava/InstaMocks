@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Global Helper Functions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Rigorous Schema Verification helper
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() <= 128 && data.uid == request.auth.uid
+          && data.name is string && data.name.size() <= 256
+          && data.email is string && data.email.size() <= 256
+          && (data.profilePhoto == null || (data.profilePhoto is string && data.profilePhoto.size() <= 2048));
+    }
+
+    // 2. Users Collection
+    match /users/{uid} {
+      allow get: if isOwner(uid) && isValidId(uid);
+      allow create: if isOwner(uid) && isValidId(uid) && isValidUser(incoming())
+          && incoming().createdAt == request.time
+          && incoming().keys().hasAll(['uid', 'name', 'email', 'createdAt'])
+          && incoming().keys().size() <= 5; // allow uid, name, email, profilePhoto, createdAt
+
+      allow update: if isOwner(uid) && isValidId(uid) && isValidUser(incoming())
+          && incoming().createdAt == existing().createdAt
+          && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'profilePhoto']);
+
+      allow delete: if false;
+    }
+  }
+}
